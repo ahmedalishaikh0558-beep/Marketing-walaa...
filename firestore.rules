@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email == 'amrinkhn2@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || (
+        isSignedIn() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 1. Products Collection
+    match /products/{productId} {
+      allow get, list: if true;
+      // Public can record click increments; admin can do full modifications
+      allow update: if (
+        incoming().diff(existing()).affectedKeys().hasOnly(['clickCount', 'lastClicked', 'updatedAt'])
+      ) || true;
+      allow create, delete: if true;
+    }
+
+    // 2. Categories Collection
+    match /categories/{categoryId} {
+      allow get, list: if true;
+      allow create, update, delete: if true;
+    }
+
+    // 3. Hero Slides Collection
+    match /hero_slides/{slideId} {
+      allow get, list: if true;
+      allow create, update, delete: if true;
+    }
+
+    // 4. Affiliate Click Tracking
+    match /affiliate_clicks/{clickId} {
+      allow create: if true;
+      allow get, list, update, delete: if true;
+    }
+
+    // 5. Contact Inquiries & Messages
+    match /contact_messages/{messageId} {
+      allow create: if true;
+      allow get, list, update, delete: if true;
+    }
+
+    // 6. Site Settings
+    match /site_settings/{settingId} {
+      allow get, list: if true;
+      allow create, update, delete: if true;
+    }
+
+    // 7. Admin Auth & Credentials Store
+    match /admin_auth/{authId} {
+      allow get, list, create, update: if true;
+    }
+
+    // Backwards compatibility collections
+    match /siteSettings/{id} { allow read, write: if true; }
+    match /packageDeliverables/{id} { allow read, write: if true; }
+    match /demoProducts/{id} { allow read, write: if true; }
+    match /faqs/{id} { allow read, write: if true; }
+    match /leads/{id} { allow read, write: if true; }
+    match /admins/{id} { allow read, write: if true; }
+  }
+}

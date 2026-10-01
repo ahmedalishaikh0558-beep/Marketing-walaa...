@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global website configuration, pricing, and contact information.",
+      "type": "object",
+      "properties": {
+        "brandName": { "type": "string", "maxLength": 100 },
+        "tagline": { "type": "string", "maxLength": 200 },
+        "currentOfferPrice": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "supportPhone": { "type": "string", "maxLength": 30 },
+        "whatsappNumber": { "type": "string", "maxLength": 30 },
+        "officialEmail": { "type": "string", "maxLength": 100 },
+        "activePromoText": { "type": "string", "maxLength": 300 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["brandName", "currentOfferPrice", "originalPrice", "supportPhone", "whatsappNumber"]
+    },
+    "PackageDeliverable": {
+      "title": "PackageDeliverable",
+      "description": "An included deliverable in the turnkey WooCommerce package.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "order": { "type": "number" },
+        "title": { "type": "string", "maxLength": 150 },
+        "highlight": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 500 },
+        "details": { "type": "array" },
+        "isActive": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "highlight", "description", "details", "isActive"]
+    },
+    "DemoProduct": {
+      "title": "DemoProduct",
+      "description": "Product displayed inside the interactive ShopKart demo storefront.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "image": { "type": "string", "maxLength": 1000 },
+        "badge": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 500 },
+        "isFeatured": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "price", "originalPrice", "rating", "image", "description"]
+    },
+    "LeadInquiry": {
+      "title": "LeadInquiry",
+      "description": "A customer consultation or store booking inquiry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "businessName": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 100 },
+        "preferredDomain": { "type": "string", "maxLength": 150 },
+        "currentStatus": { "type": "string", "maxLength": 100 },
+        "plan": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["New", "Contacted", "Closed", "Archived"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["fullName", "phone", "businessName", "category", "status"]
+    },
+    "FaqItem": {
+      "title": "FaqItem",
+      "description": "Frequently asked question and answer item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "order": { "type": "number" },
+        "question": { "type": "string", "maxLength": 300 },
+        "answer": { "type": "string", "maxLength": 2000 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "question", "answer"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized administrator record for CMS management.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["admin"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/siteSettings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "Global website configuration, pricing, and contact information."
+    },
+    "/packageDeliverables/{deliverableId}": {
+      "schema": "PackageDeliverable",
+      "description": "Deliverable packages included in the turnkey offer."
+    },
+    "/demoProducts/{productId}": {
+      "schema": "DemoProduct",
+      "description": "Catalog of products for the interactive ShopKart demo store."
+    },
+    "/leads/{leadId}": {
+      "schema": "LeadInquiry",
+      "description": "Private inbound store booking inquiries from prospective clients."
+    },
+    "/faqs/{faqId}": {
+      "schema": "FaqItem",
+      "description": "Frequently asked questions and detailed answers."
+    },
+    "/admins/{adminUid}": {
+      "schema": "AdminUser",
+      "description": "Authorized administrators with CMS editing privileges."
+    }
+  }
+}
